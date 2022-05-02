@@ -45,6 +45,21 @@ public class App {
 		
 		// TODO: implement the routes required for the access control service
 		// as per the HTTP/REST operations describined in the project description
+
+		post("/accessdevice/log", (req, res) -> {
+
+			System.out.println("Du fikk en request. Post/accessdevice/log");
+
+			Gson gson = new Gson();
+
+			AccessMessage accessMessage = gson.fromJson(req.body(), AccessMessage.class);
+
+			int id = accesslog.add(accessMessage.getMessage());
+
+			AccessEntry accessEntry = new AccessEntry(id, accessMessage.getMessage());
+
+			return gson.toJson(accessEntry);
+		});
 		
     }
     
