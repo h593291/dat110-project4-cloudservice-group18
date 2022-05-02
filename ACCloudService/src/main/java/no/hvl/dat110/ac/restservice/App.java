@@ -9,6 +9,8 @@ import static spark.Spark.delete;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+
 /**
  * Hello world!
  *
@@ -46,7 +48,7 @@ public class App {
 		// TODO: implement the routes required for the access control service
 		// as per the HTTP/REST operations describined in the project description
 
-		post("/accessdevice/log", (req, res) -> {
+		post("/accessdevice/log/", (req, res) -> {
 
 			System.out.println("Du fikk en request. Post/accessdevice/log");
 
@@ -60,7 +62,40 @@ public class App {
 
 			return gson.toJson(accessEntry);
 		});
-		
+
+		get("/accessdevice/log/", (req, res) -> {
+
+			return accesslog.toJson();
+		});
+
+		get("/accessdevice/log/{id}", (req, res) -> {
+
+			Gson gson = new Gson();
+
+			int id = req.queryMap("id").integerValue();
+
+			AccessEntry accessEntry = accesslog.get(id);
+
+			if(accessEntry == null) {
+				res.status(404);
+				res.body("ID not found.");
+				return "";
+			}
+
+			return gson.toJson(accessEntry);
+		});
+
+		put("/accessdevice/code", (req, res) -> {
+
+			Gson gson = new Gson();
+
+			accesscode = gson.fromJson(req.body(), AccessCode.class);
+
+			return req.body();
+
+		});
+
+		// TODO: 2 REST remain
     }
     
 }
