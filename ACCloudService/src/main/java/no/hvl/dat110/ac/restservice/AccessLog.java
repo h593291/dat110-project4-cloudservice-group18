@@ -6,7 +6,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.google.gson.Gson;
 
 public class AccessLog {
-	
+
+	private Gson gson;
+
 	// atomic integer used to obtain identifiers for each access entry
 	private AtomicInteger cid;
 	protected ConcurrentHashMap<Integer, AccessEntry> log;
@@ -14,6 +16,7 @@ public class AccessLog {
 	public AccessLog () {
 		this.log = new ConcurrentHashMap<Integer,AccessEntry>();
 		cid = new AtomicInteger(0);
+		gson = new Gson();
 	}
 
 	public int add(String message) {
@@ -34,9 +37,6 @@ public class AccessLog {
 	}
 	
 	public String toJson () {
-    	
-		Gson gson = new Gson();
-
     	return gson.toJson(log.values());
     }
 }

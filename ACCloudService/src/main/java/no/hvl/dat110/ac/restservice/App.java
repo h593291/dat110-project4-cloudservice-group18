@@ -9,8 +9,6 @@ import static spark.Spark.delete;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-
 /**
  * Hello world!
  *
@@ -19,6 +17,7 @@ public class App {
 	
 	static AccessLog accesslog = null;
 	static AccessCode accesscode = null;
+	private static Gson gson = new Gson();
 	
 	public static void main(String[] args) {
 
@@ -39,21 +38,10 @@ public class App {
 		
 		// for basic testing purposes
 		get("/accessdevice/hello", (req, res) -> {
-			
-		 	Gson gson = new Gson();
-		 	
-		 	return gson.toJson("IoT Access Control Device");
+			return gson.toJson("IoT Access Control Device");
 		});
 		
-		// TODO: implement the routes required for the access control service
-		// as per the HTTP/REST operations describined in the project description
-
 		post("/accessdevice/log/", (req, res) -> {
-
-			System.out.println("Du fikk en request. Post/accessdevice/log");
-			System.out.println(req.body());
-
-			Gson gson = new Gson();
 
 			AccessMessage accessMessage = gson.fromJson(req.body(), AccessMessage.class);
 
@@ -71,8 +59,6 @@ public class App {
 
 		get("/accessdevice/log/:id", (req, res) -> {
 
-			Gson gson = new Gson();
-
 			int id = Integer.parseInt(req.params(":id"));
 
 			AccessEntry accessEntry = accesslog.get(id);
@@ -88,8 +74,6 @@ public class App {
 
 		put("/accessdevice/code/", (req, res) -> {
 
-			Gson gson = new Gson();
-
 			accesscode = gson.fromJson(req.body(), AccessCode.class);
 
 			return req.body();
@@ -97,8 +81,6 @@ public class App {
 		});
 
 		get("/accessdevice/code/", (req, res) -> {
-
-			Gson gson = new Gson();
 
 			return gson.toJson(accesscode);
 		});
