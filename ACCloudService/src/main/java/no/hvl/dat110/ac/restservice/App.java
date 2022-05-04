@@ -51,6 +51,7 @@ public class App {
 		post("/accessdevice/log/", (req, res) -> {
 
 			System.out.println("Du fikk en request. Post/accessdevice/log");
+			System.out.println(req.body());
 
 			Gson gson = new Gson();
 
@@ -68,11 +69,11 @@ public class App {
 			return accesslog.toJson();
 		});
 
-		get("/accessdevice/log/{id}", (req, res) -> {
+		get("/accessdevice/log/:id", (req, res) -> {
 
 			Gson gson = new Gson();
 
-			int id = req.queryMap("id").integerValue();
+			int id = Integer.parseInt(req.params(":id"));
 
 			AccessEntry accessEntry = accesslog.get(id);
 
@@ -85,7 +86,7 @@ public class App {
 			return gson.toJson(accessEntry);
 		});
 
-		put("/accessdevice/code", (req, res) -> {
+		put("/accessdevice/code/", (req, res) -> {
 
 			Gson gson = new Gson();
 
@@ -95,7 +96,18 @@ public class App {
 
 		});
 
-		// TODO: 2 REST remain
+		get("/accessdevice/code/", (req, res) -> {
+
+			Gson gson = new Gson();
+
+			return gson.toJson(accesscode);
+		});
+
+		delete("/accessdevice/log/", (req, res) -> {
+
+			accesslog.clear();
+
+			return accesslog.toJson();
+		});
     }
-    
 }
