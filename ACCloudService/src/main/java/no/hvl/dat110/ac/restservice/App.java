@@ -1,13 +1,8 @@
 package no.hvl.dat110.ac.restservice;
 
-import static spark.Spark.after;
-import static spark.Spark.get;
-import static spark.Spark.port;
-import static spark.Spark.put;
-import static spark.Spark.post;
-import static spark.Spark.delete;
-
 import com.google.gson.Gson;
+
+import static spark.Spark.*;
 
 /**
  * Hello world!
@@ -31,7 +26,13 @@ public class App {
 		
 		accesslog = new AccessLog();
 		accesscode  = new AccessCode();
-		
+
+		before((req, res) -> {
+			String path = req.pathInfo();
+			if(req.requestMethod().equals("GET") && path.endsWith("/"))
+				res.redirect(path.substring(0, path.length()-1));
+		});
+
 		after((req, res) -> {
   		  res.type("application/json");
   		});
@@ -41,7 +42,7 @@ public class App {
 			return gson.toJson("IoT Access Control Device");
 		});
 		
-		post("/accessdevice/log/", (req, res) -> {
+		post("/accessdevice/log", (req, res) -> {
 
 			AccessMessage accessMessage = gson.fromJson(req.body(), AccessMessage.class);
 
@@ -52,7 +53,7 @@ public class App {
 			return gson.toJson(accessEntry);
 		});
 
-		get("/accessdevice/log/", (req, res) -> {
+		get("/accessdevice/log", (req, res) -> {
 
 			return accesslog.toJson();
 		});
@@ -72,7 +73,7 @@ public class App {
 			return gson.toJson(accessEntry);
 		});
 
-		put("/accessdevice/code/", (req, res) -> {
+		put("/accessdevice/code", (req, res) -> {
 
 			accesscode = gson.fromJson(req.body(), AccessCode.class);
 
@@ -80,12 +81,12 @@ public class App {
 
 		});
 
-		get("/accessdevice/code/", (req, res) -> {
+		get("/accessdevice/code", (req, res) -> {
 
 			return gson.toJson(accesscode);
 		});
 
-		delete("/accessdevice/log/", (req, res) -> {
+		delete("/accessdevice/log", (req, res) -> {
 
 			accesslog.clear();
 
